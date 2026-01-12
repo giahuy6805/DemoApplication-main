@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    // Chỉ giữ lại một cái này là đủ
     Optional<User> findByEmail(String email);
 }

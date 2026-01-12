@@ -19,15 +19,27 @@ repositories {
 }
 
 dependencies {
+	// 1. Core Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-web' // Thay cho webmvc để chuẩn hơn
+
+	// 2. Security (Chỉ cần 1 dòng này là đủ cho cả Web và Config)
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// 3. Tiện ích
 	implementation 'net.datafaker:datafaker:2.4.0'
-	runtimeOnly 'com.mysql:mysql-connector-j'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// 4. Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

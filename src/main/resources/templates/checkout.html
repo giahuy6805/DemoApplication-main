@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán | TechHub Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+<nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/"><h1 class="text-2xl font-bold text-black tracking-tighter">TechHub.</h1></a>
+        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Thanh toán bảo mật</span>
+    </div>
+</nav>
+
+<main class="pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-6">
+        <form th:action="@{/cart/order}" method="post" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+            <div class="lg:col-span-7 space-y-8">
+                <section class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+                    <h2 class="text-2xl font-bold mb-8 tracking-tight">Thông tin giao hàng.</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 ml-1">Họ và tên người nhận</label>
+                            <input type="text" name="receiverName" th:value="${session.loggedInUser.fullName}" required
+                                   class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm font-medium">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 ml-1">Số điện thoại</label>
+                            <input type="tel" name="receiverPhone" required
+                                   class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm font-medium"
+                                   placeholder="09xx xxx xxx">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email</label>
+                            <input type="email" th:value="${session.loggedInUser.email}" disabled
+                                   class="w-full px-5 py-4 bg-gray-100 border border-gray-100 rounded-2xl text-gray-400 text-sm font-medium cursor-not-allowed">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 ml-1">Địa chỉ nhận hàng</label>
+                            <textarea name="address" required rows="3"
+                                      class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm font-medium"
+                                      placeholder="Số nhà, tên đường, phường/xã..."></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+                    <h2 class="text-2xl font-bold mb-6 tracking-tight">Phương thức thanh toán.</h2>
+                    <div class="flex items-center p-4 border-2 border-blue-600 bg-blue-50 rounded-2xl">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm">Thanh toán khi nhận hàng (COD)</p>
+                            <p class="text-xs text-blue-600/60 font-medium">Bạn sẽ thanh toán sau khi nhận được hàng.</p>
+                        </div>
+                        <i class="fas fa-check-circle ml-auto text-blue-600"></i>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="lg:col-span-5 space-y-6">
+                <div class="bg-black text-white p-10 rounded-[2.5rem] shadow-2xl shadow-blue-900/20">
+                    <h3 class="text-xl font-bold mb-8 border-b border-white/10 pb-4">Đơn hàng của bạn.</h3>
+
+                    <div class="space-y-4 mb-8 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                        <div th:each="item : ${cartItems}" class="flex justify-between items-center text-sm">
+                            <span class="text-gray-400 font-medium">
+                                <span th:text="${item.name}" class="text-white">Product Name</span>
+                                <span th:text="'x' + ${item.quantity}">x1</span>
+                            </span>
+                            <span class="font-bold" th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 border-t border-white/10 pt-6">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400 font-medium">Phí vận chuyển</span>
+                            <span class="text-green-400 font-bold uppercase tracking-widest text-[10px] bg-green-400/10 px-2 py-1 rounded">Miễn phí</span>
+                        </div>
+                        <div class="flex justify-between items-end pt-4">
+                            <span class="text-lg font-bold">TỔNG CỘNG</span>
+                            <span class="text-3xl font-extrabold text-blue-400 tracking-tighter"
+                                  th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-white text-black font-extrabold py-5 rounded-2xl hover:bg-gray-200 transition-all mt-10 uppercase tracking-widest text-sm shadow-xl">
+                        XÁC NHẬN ĐẶT HÀNG
+                    </button>
+                </div>
+                <a href="/cart/view" class="block text-center text-xs text-gray-400 hover:text-black transition-all uppercase tracking-widest font-bold">← Quay lại giỏ hàng</a>
+            </aside>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

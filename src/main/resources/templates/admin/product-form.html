@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lofi Tech | Quản lý sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+</head>
+<body>
+
+<aside id="sidebar">
+    <a class="sidebar-brand" href="/admin/dashboard">
+        <div class="brand-icon"><i class="bi bi-cpu-fill"></i></div>
+        <div class="brand-text">Lofi Tech <span>Admin Panel</span></div>
+    </a>
+    <ul class="sidebar-nav">
+        <li><div class="sidebar-label">Menu chính</div></li>
+        <li class="nav-item"><a th:href="@{/admin/dashboard}"><i class="bi bi-grid-1x2-fill"></i><span>Tổng quan</span></a></li>
+        <li class="nav-item"><a th:href="@{/admin/products/laptops}"><i class="bi bi-laptop"></i><span>Quản lý Laptop</span></a></li>
+        <li class="nav-item"><a th:href="@{/admin/products/phones}"><i class="bi bi-phone"></i><span>Quản lý Điện thoại</span></a></li>
+
+        <li><div class="sidebar-label">Vận hành</div></li>
+        <li class="nav-item"><a th:href="@{/admin/orders}"><i class="bi bi-cart4"></i><span>Đơn hàng</span></a></li>
+
+        <li class="nav-item">
+            <a th:href="@{/admin/users}">
+                <i class="bi bi-people-fill"></i>
+                <span>Quản lý tài khoản</span>
+            </a>
+        </li>
+
+        <li><div class="sidebar-label">Hệ thống</div></li>
+        <li class="nav-item"><a th:href="@{/logout}" class="text-danger"><i class="bi bi-box-arrow-right"></i><span>Đăng xuất</span></a></li>
+    </ul>
+</aside>
+
+<div id="main-wrapper">
+    <header id="topbar">
+        <button id="sidebarToggle"><i class="bi bi-list"></i></button>
+        <div class="topbar-profile">
+            <strong>Nguyễn Admin</strong>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="page-header d-flex flex-wrap align-items-start justify-content-between gap-3 anim">
+            <div>
+                <h1 th:text="${product.id == null ? 'Thêm sản phẩm mới' : 'Chỉnh sửa sản phẩm'}">Form sản phẩm</h1>
+                <div class="section-title-divider mt-1 mb-2"></div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Lofi Tech</a></li>
+                        <li class="breadcrumb-item active" th:text="${product.id == null ? 'Thêm mới' : 'Cập nhật'}">Thao tác</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="dash-card anim anim-d1 mt-3">
+            <div class="dash-card-body p-4">
+                <form th:action="@{/admin/products/save}"
+                      th:object="${product}"
+                      method="post"
+                      enctype="multipart/form-data"
+                      novalidate> <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{view}">
+
+                    <div class="row g-4">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Tên sản phẩm</label>
+                            <input type="text" th:field="*{name}"
+                                   class="form-control rounded-3 p-2"
+                                   th:errorclass="is-invalid"
+                                   placeholder="VD: MacBook Air M3 2024">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label class="form-label fw-bold" style="color: var(--primary);">
+                                <i class="bi bi-image me-1"></i> Hình ảnh sản phẩm
+                            </label>
+                            <input type="file" name="imageFile" class="form-control rounded-3" accept="image/*">
+                            <div th:if="${product.image != null}" class="mt-3">
+                                <img th:src="@{'/images/' + ${product.image}}" alt="Ảnh sản phẩm" style="max-width: 150px; border-radius: 8px;">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Danh mục</label>
+                            <select th:field="*{category.id}" class="form-select rounded-3 p-2" th:errorclass="is-invalid">
+                                <option value="">-- Chọn loại hàng --</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Giá bán (VNĐ)</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text bg-light"><i class="bi bi-currency-dollar"></i></span>
+                                <input type="number" th:field="*{price}" class="form-control p-2" th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Số lượng trong kho</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text bg-light"><i class="bi bi-box-seam"></i></span>
+                                <input type="number" th:field="*{quantity}" class="form-control p-2" th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Mô tả chi tiết / Cấu hình</label>
+                            <textarea th:field="*{description}" class="form-control rounded-3" rows="5" th:errorclass="is-invalid"></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-5 rounded-pill shadow-sm">
+                            <i class="bi bi-check-lg me-1"></i> Lưu dữ liệu
+                        </button>
+                        <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary px-4 rounded-pill">Quay lại</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Hàm xem trước ảnh khi chọn file
+    const imageInput = document.querySelector('input[name="imageFile"]');
+    imageInput.onchange = evt => {
+        const [file] = imageInput.files;
+        if (file) {
+            // Tìm hoặc tạo vùng hiển thị ảnh preview
+            let previewContainer = document.querySelector('.preview-container');
+            if(!previewContainer) {
+                // Nếu chưa có vùng preview thì tạo mới (hoặc Huy có thể tự thêm div vào HTML)
+                console.log("Đã chọn file: " + file.name);
+            }
+            // Đoạn này Huy có thể dùng JS để thay đổi src của thẻ img có sẵn
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -11,16 +12,18 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Tên danh mục không được để trống")
     @Column(length = 128)
     private String name;
-
+    @NotBlank(message = "Ảnh đại diện danh mục không được trống")
     @Column(length = 1024)
     private String thumbnail;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
-    // Getters and Setters
+    // --- GETTERS AND SETTERS ---
 
     public Integer getId() {
         return id;
@@ -44,5 +47,13 @@ public class Category {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }
