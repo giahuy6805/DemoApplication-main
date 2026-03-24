@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Category List</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2 f2 f2; }
+    </style>
+</head>
+<body>
+<h2>Danh sách Category đã Seed</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên danh mục</th>
+        <th>Thumbnail</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${products}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.name}"></td>
+        <td><img th:src="${c.thumbnail}" width="50"/></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
