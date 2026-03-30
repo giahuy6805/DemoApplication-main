@@ -32,4 +32,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     Double getRevenueByCategory(@Param("catName") String catName);
 
     List<Order> findByUserOrderByCreatedAtDesc(User user);
+
+    List<Order> findByUserIdOrderByIdDesc(Integer userId);
 }

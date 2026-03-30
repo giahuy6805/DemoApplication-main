@@ -106,13 +106,18 @@
                                       class="badge rounded-pill bg-danger-light text-danger">
         Đã hủy
     </span>
-                            </td>
                             <td class="text-center">
                                 <div class="d-flex gap-2 justify-content-center">
                                     <a th:href="@{/admin/orders/detail/{id}(id=${order.id})}" class="btn-action btn-edit" title="Xem chi tiết">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
-                                    <button class="btn-action btn-del" title="Hủy đơn"><i class="bi bi-x-circle-fill"></i></button>
+
+                                    <a th:href="@{/admin/orders/delete/{id}(id=${order.id})}"
+                                       class="btn-action btn-del"
+                                       title="Hủy đơn"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?');">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
